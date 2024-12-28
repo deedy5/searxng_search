@@ -56,6 +56,10 @@ from searxng_search import SearxngSearch
 ss = SearxngSearch(proxy="socks5h://user:password@geo.iproyal.com:32325", timeout=20)
 results = ss.text("something you need")
 ```
+*3. The proxy can also be set using the `SEARXNG_PROXY` environment variable.*
+```python3
+export SEARXNG_PROXY="socks5h://user:password@geo.iproyal.com:32325"
+```
 ___
 ### Exceptions
 
