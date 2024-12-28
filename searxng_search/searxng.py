@@ -22,7 +22,6 @@ logger = logging.getLogger("SearxngSearch")
 class SearxngSearch:
     """Searxng search class to get search results searxng instances"""
 
-    _searxng_proxy: str | None = os.environ.get("SEARXNG_PROXY")
     _impersonates = (
         "chrome_100", "chrome_101", "chrome_104", "chrome_105", "chrome_106", "chrome_107",
         "chrome_108", "chrome_109", "chrome_114", "chrome_116", "chrome_117", "chrome_118",
@@ -36,6 +35,8 @@ class SearxngSearch:
         "edge_101", "edge_122", "edge_127", "edge_131",
         "firefox_109", "firefox_133",
     )  # fmt: skip
+    _searxng_proxy: str | None = os.environ.get("SEARXNG_PROXY")
+    _searxng_file = Path.home() / "searxng_instances.txt"
 
     def __init__(
         self,
@@ -124,16 +125,14 @@ class SearxngSearch:
         return results
 
     def _load_searxng_instances(self) -> list[str]:
-        file_path = Path.home() / "searxng_instances.txt"
         data = []
-        if file_path.exists() and time() - file_path.stat().st_mtime < 3600:
-            with open(file_path) as file:
+        if self._searxng_file.exists() and time() - self._searxng_file.stat().st_mtime < 3600:
+            with open(self._searxng_file) as file:
                 data = file.read().split()
         elif not data:
             data = self._get_searxng_instances()
-
-        with open(file_path, "w", encoding="utf-8") as file:
-            file.write("\n".join(data))
+            with open(self._searxng_file, "w", encoding="utf-8") as file:
+                file.write("\n".join(data))
         return data
 
     def search(
